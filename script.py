@@ -1,7 +1,5 @@
 import json
-
-from jsonschema import validate
-import simplejson as simple
+from jsonschema import validate, Draft4Validator
 
 schema = {
 	#"type": "object",
@@ -89,19 +87,23 @@ schema = {
 	},
 }
 
+def set_default(obj):
+	if isinstance(obj, set):
+		return list(obj)
+	raise TypeError
+
 with open('testResume.json', encoding="cp437") as jsonData:
-#	data = json.load(jsonData)
 	for temp in jsonData:
 		temp = jsonData.read()
-		data = json.load(jsonData)
-		print(data)
+data = json.dumps(temp, default=set_default)
+j = json.loads(data)
+#print(j)
+#print(data)
+validate(j, schema)
+#data = data.translate({ord(c):'' for c in '\n'})
+#data = data.replace('\n', ' ')
+#print(data)
 
+#print(data)
 #validate({data["basics"]["name"]}, schema)
 #print(data["basics"]["profiles"])
-
-#d = json.open('testResume.json').read()
-
-#data = json.loads(d)
-
-#print(simple.dumps('testResume.json'))
-#simple.dumps('lmao')
